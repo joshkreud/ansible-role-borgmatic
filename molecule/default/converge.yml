@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    borg_backup_passphrase: moleculesecret
+  roles:
+    - role: joshkreud.borgmatic

@@ -1,0 +1,20 @@
+---
+- name: Install Borgbackup
+  ansible.builtin.package:
+    name:
+      - borgbackup
+      - jq
+    state: present
+
+- name: Ensure Pip Packages installed
+  ansible.builtin.pip:
+    name: borgmatic
+
+- name: Borgmatic Config Folder
+  become: true
+  ansible.builtin.file:
+    path: "/etc/borgmatic"
+    state: directory
+    owner: "{{ borgbackup_user.name }}"
+    group: "{{ borgbackup_user.name }}"
+    mode: 0770

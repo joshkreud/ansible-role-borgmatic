@@ -1,0 +1,27 @@
+---
+backup_cron: False
+borg_backup_targets:
+  - /srv/backup
+borg_backup_source_paths:
+  - "{{ ansible_env.HOME }}"
+borg_user_groups: []
+borg_retention_policy:
+  keep_hourly: 3
+  keep_daily: 7
+  keep_weekly: 4
+  keep_monthly: 6
+borgmatic_hooks:
+  on_error:
+    - echo "`date` - Error while creating a backup."
+  before_backup:
+    - echo "`date` - Starting backup."
+  after_backup:
+    - echo "`date` - Finished backup."
+borg_exclude_patterns:
+  - "*/tmp/*"
+  - "*/cache/*"
+  - "*/log/*"
+  - "*/logs/*"
+borgmatic_checks:
+  - repository
+  - archives

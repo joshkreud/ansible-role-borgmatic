@@ -1,0 +1,48 @@
+---
+- name: "Check mandatory variables are defined"
+  ansible.builtin.assert:
+    that:
+      - borg_backup_passphrase is defined
+
+- name: Add Borguser
+  ansible.builtin.import_tasks: borg-user.yml
+
+- name: Install Borgmatic
+  ansible.builtin.import_tasks: borg-install.yml
+
+- name: Template Borgmatic Config
+  become: yes
+  ansible.builtin.template:
+    src: borgmatic-config.yml.j2
+    dest: /etc/borgmatic/config.yaml
+    owner: "{{ borgbackup_user.name }}"
+    group: "{{ borgbackup_user.name }}"
+    mode: 0660
+
+- name: Ensure Borg SSH Targets are in Known Hosts
+  become: yes
+  when: borg_ssh_known_hosts is defined
+  ansible.builtin.blockinfile:
+    path: /root/.ssh/known_hosts
+    block: "{{ borg_ssh_known_hosts }}"
+    marker: "<!-- {mark} ANSIBLE MANAGED SSH borg_knownhosts -->"
+    create: yes
+    owner: root
+    mode: 0600
+
+- name: Ensure Borg repos initialized
+  become: yes
+  ansible.builtin.shell:
+    cmd: borgmatic init -e repokey
+  register: borg_init_command
+  changed_when: "'Write down the passphrase.' in borg_init_command.stderr"
+  tags: ["skip_ansible_lint"]
+
+- name: Set Backup Cron Job
+  become: yes
+  ansible.builtin.cron:
+    name: "Borg Backup"
+    minute: "47"
+    hour: "4"
+    job: "PATH=$PATH:/usr/bin:/usr/local/bin borgmatic --verbosity 1 --syslog-verbosity 1"
+  when: backup_cron

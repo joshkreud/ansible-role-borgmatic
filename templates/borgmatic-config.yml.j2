@@ -1,0 +1,64 @@
+location:
+  source_directories:
+{% for source in borg_backup_source_paths %}
+    - "{{ source }}"
+{% endfor %}
+
+  repositories:
+{% for target in borg_backup_targets %}
+    - "{{ target }}"
+{% endfor %}
+
+  exclude_if_present:
+    - .nobackup
+
+{% if borg_exclude_patterns is defined %}
+  exclude_patterns:
+{% for pattern in borg_exclude_patterns %}
+    - "{{ pattern }}"
+{% endfor %}
+{% endif %}
+
+storage:
+  compression: auto,zstd
+  archive_name_format: '{hostname}-{now:%Y-%m-%d.%H}'
+  ssh_command: ssh -i {{ borgbackup_user.ssh_key_file }}
+  encryption_passphrase: "{{ borg_backup_passphrase }}"
+
+retention:
+  prefix: '{hostname}-'
+{% if borg_retention_policy.keep_secondly is defined %}
+  keep_secondly: {{ borg_retention_policy.keep_secondly }}
+{% endif %}
+{% if borg_retention_policy.keep_minutely is defined %}
+  keep_minutely: {{ borg_retention_policy.keep_minutely }}
+{% endif %}
+{% if borg_retention_policy.keep_hourly is defined %}
+  keep_hourly: {{ borg_retention_policy.keep_hourly }}
+{% endif %}
+{% if borg_retention_policy.keep_daily is defined %}
+  keep_daily: {{ borg_retention_policy.keep_daily }}
+{% endif %}
+{% if borg_retention_policy.keep_weekly is defined %}
+  keep_weekly: {{ borg_retention_policy.keep_weekly }}
+{% endif %}
+{% if borg_retention_policy.keep_monthly is defined %}
+  keep_monthly: {{ borg_retention_policy.keep_monthly }}
+{% endif %}
+{% if borg_retention_policy.keep_yearly is defined %}
+  keep_yearly: {{ borg_retention_policy.keep_yearly }}
+{% endif %}
+
+consistency:
+  checks:
+{% for checks in borgmatic_checks %}
+    - {{ checks }}
+{% endfor %}
+  check_last: 3
+
+
+hooks:
+{% for hook in borgmatic_hooks %}
+  {{ hook }}:
+    {{ borgmatic_hooks[hook] | to_nice_yaml(indent=2) | trim | indent(8) }}
+{% endfor %}

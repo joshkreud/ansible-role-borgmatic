@@ -1,0 +1,14 @@
+---
+- name: "Create Backup User"
+  become: yes
+  ansible.builtin.user:
+    name: "borgbackup"
+    generate_ssh_key: yes
+    ssh_key_type: ed25519
+    state: present
+    groups: "{{ borg_user_groups }}"
+  register: borgbackup_user
+
+- name: Display Borg User
+  ansible.builtin.debug:
+    msg: "{{ borgbackup_user['ssh_public_key'] }}"
