@@ -1,0 +1,25 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: borgmatic
+  author: joshkreud
+  description: |
+    Setup Borgmatic deduplicated backups
+  issue_tracker_url: https://github.com/OpenJKSoftware/ansible-role-borgmatic/issues
+  company: "Joshua Kreuder - Software"
+  license: "MIT"
+  min_ansible_version: "2.10"
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+  galaxy_tags:
+    - system
+    - server
+    - tools
+    - backup
+    - borg
