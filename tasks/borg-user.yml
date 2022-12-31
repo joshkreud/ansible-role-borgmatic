@@ -16,4 +16,4 @@
 - name: Wait for Repo Auth confirmation.
   when: borgbackup_user.changed
   ansible.builtin.pause:
-    prompt: "Make sure Pubkey is in the Repos authorized keys list"
+    prompt: "Make sure Pubkey is in the Repos authorized keys list (press any key to continue)"
