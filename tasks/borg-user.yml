@@ -12,3 +12,8 @@
 - name: Display Borg User
   ansible.builtin.debug:
     msg: "{{ borgbackup_user['ssh_public_key'] }}"
+
+- name: Wait for Repo Auth confirmation.
+  when: borgbackup_user.changed
+  ansible.builtin.pause:
+    prompt: "Make sure Pubkey is in the Repos authorized keys list"
