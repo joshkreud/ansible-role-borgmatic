@@ -1,4 +1,5 @@
 ---
+pip_package: python3-pip
 backup_cron: False
 borg_backup_targets:
   - /srv/backup
