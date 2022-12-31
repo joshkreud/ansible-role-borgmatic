@@ -5,9 +5,11 @@
       - borg_backup_passphrase is defined
 
 - name: Add Borguser
+  become: yes
   ansible.builtin.import_tasks: borg-user.yml
 
 - name: Install Borgmatic
+  become: yes
   ansible.builtin.import_tasks: borg-install.yml
 
 - name: Template Borgmatic Config
