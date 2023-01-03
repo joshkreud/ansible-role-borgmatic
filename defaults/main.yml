@@ -1,6 +1,7 @@
 ---
 pip_package: python3-pip
 backup_cron: False
+borg_backup_username: borgbackup
 borg_backup_targets:
   - /srv/backup
 borg_backup_source_paths:

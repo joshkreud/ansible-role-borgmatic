@@ -2,7 +2,7 @@
 - name: "Create Backup User"
   become: yes
   ansible.builtin.user:
-    name: "borgbackup"
+    name: "{{ borg_backup_username }}"
     generate_ssh_key: yes
     ssh_key_type: ed25519
     state: present
