@@ -1,6 +1,8 @@
 ---
 pip_package: python3-pip
-backup_cron: False
+borgmatic_cron: False
+borgmatic_cron_minute: 36
+borgmatic_cron_hour: 4
 borg_backup_username: borgbackup
 borg_backup_targets:
   - /srv/backup

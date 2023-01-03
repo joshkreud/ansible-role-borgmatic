@@ -44,7 +44,7 @@
   become: yes
   ansible.builtin.cron:
     name: "Borg Backup"
-    minute: "47"
-    hour: "4"
+    minute: "{{ borgmatic_cron_minute }}"
+    hour: "{{ borgmatic_cron_hour }}"
     job: "PATH=$PATH:/usr/bin:/usr/local/bin borgmatic --verbosity 1 --syslog-verbosity 1"
-  when: backup_cron
+  when: borgmatic_cron
