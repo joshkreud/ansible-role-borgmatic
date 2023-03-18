@@ -35,7 +35,7 @@
 - name: Ensure Borg repos initialized
   become: yes
   ansible.builtin.shell:
-    cmd: borgmatic init -e repokey
+    cmd: borgmatic init -e repokey --verbosity 2
   register: borg_init_command
   changed_when: "'Write down the passphrase.' in borg_init_command.stderr"
   tags: ["skip_ansible_lint"]
