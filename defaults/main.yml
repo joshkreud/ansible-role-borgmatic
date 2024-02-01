@@ -5,7 +5,8 @@ borgmatic_cron_minute: 36
 borgmatic_cron_hour: 4
 borg_backup_username: borgbackup
 borg_backup_targets:
-  - /srv/backup
+  - path: /srv/backup
+    label: localsrv
 borg_backup_source_paths:
   - "{{ ansible_env.HOME }}"
 borg_user_groups: []
@@ -27,5 +28,11 @@ borg_exclude_patterns:
   - "*/log/*"
   - "*/logs/*"
 borgmatic_checks:
-  - repository
-  - archives
+  - name: repository
+    frequency: 1 day
+  - name: archives
+    frequency: 1 day
+  - name: data
+    frequency: 1 day
+  - name: extract
+    frequency: 1 week

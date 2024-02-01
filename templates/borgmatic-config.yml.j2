@@ -5,7 +5,10 @@ source_directories:
 
 repositories:
 {% for target in borg_backup_targets %}
-  - "{{ target }}"
+  - path: "{{ target.path }}"
+{% if target.label is defined %}
+    label: "{{ target.label }}"
+{% endif %}
 {% endfor %}
 
 exclude_if_present:
@@ -23,7 +26,6 @@ archive_name_format: '{hostname}-{now:%Y-%m-%dT%H:%M}'
 ssh_command: ssh -i {{ borgbackup_user.ssh_key_file }}
 encryption_passphrase: "{{ borg_backup_passphrase }}"
 
-prefix: '{hostname}-'
 {% if borg_retention_policy.keep_secondly is defined %}
 keep_secondly: {{ borg_retention_policy.keep_secondly }}
 {% endif %}
