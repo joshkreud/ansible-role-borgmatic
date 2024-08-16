@@ -47,4 +47,4 @@
     minute: "{{ borgmatic_cron_minute }}"
     hour: "{{ borgmatic_cron_hour }}"
     job: "PATH=$PATH:/usr/bin:/usr/local/bin borgmatic --verbosity 1 --syslog-verbosity 1"
-  when: borgmatic_cron
+    state: "{{ 'present' if borgmatic_cron else 'absent' }}"
