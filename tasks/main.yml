@@ -15,7 +15,7 @@
 - name: Template Borgmatic Config
   become: yes
   ansible.builtin.template:
-    src: borgmatic-config.yml.j2
+    src: "{{ borgmatic_config_template }}"
     dest: /etc/borgmatic/config.yaml
     owner: "{{ borgbackup_user.name }}"
     group: "{{ borgbackup_user.name }}"

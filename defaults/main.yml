@@ -1,5 +1,6 @@
 ---
 pip_package: python3-pip
+borgmatic_config_template: borgmatic-config.yml.j2
 borgmatic_cron: False
 borgmatic_cron_minute: 36
 borgmatic_cron_hour: 4
