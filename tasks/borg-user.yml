@@ -9,6 +9,16 @@
     groups: "{{ borg_user_groups }}"
   register: borgbackup_user
 
+- name: Add Known Hosts to Borg Backup User
+  become: yes
+  ansible.builtin.copy:
+    content: "{{ borg_backup_known_hosts }}"
+    dest: "/home/{{ borg_backup_username }}/.ssh/known_hosts"
+    owner: "{{ borg_backup_username }}"
+    group: "{{ borg_backup_username }}"
+    mode: "0600"
+  when: borg_backup_known_hosts is defined and borg_backup_known_hosts != ""
+
 - name: Display Borg User
   ansible.builtin.debug:
     msg: "{{ borgbackup_user['ssh_public_key'] }}"
