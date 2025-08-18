@@ -7,7 +7,7 @@ name: CI
       - main
 
 env:
-  ROLE_NAME: "joshkreud.initialuser"
+  ROLE_NAME: "joshkreud.borgmatic"
 
 jobs:
   lint:
@@ -39,9 +39,9 @@ jobs:
     strategy:
       matrix:
         distro:
-          - ubuntu2204
-          - debian11
-          - debian10
+          - ubuntu2404
+          - debian12
+          - debian13
 
     steps:
       - name: Check out the codebase.

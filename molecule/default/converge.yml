@@ -3,5 +3,6 @@
   hosts: all
   vars:
     borg_backup_passphrase: moleculesecret
+    molecule_test: true
   roles:
     - role: joshkreud.borgmatic

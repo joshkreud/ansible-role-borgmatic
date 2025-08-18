@@ -24,6 +24,6 @@
     msg: "{{ borgbackup_user['ssh_public_key'] }}"
 
 - name: Wait for Repo Auth confirmation.
-  when: borgbackup_user.changed
+  when: borgbackup_user.changed and not molecule_test is defined
   ansible.builtin.pause:
     prompt: "Make sure Pubkey is in the Repos authorized keys list (press any key to continue)"
