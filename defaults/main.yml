@@ -23,11 +23,7 @@ borg_retention_policy:
   keep_daily: 7
   keep_weekly: 4
   keep_monthly: 6
-borgmatic_commands:
-  - before: action
-    when: [create]
-    run:
-      - echo "`date` - Error while creating a backup."
+
 borg_exclude_patterns:
   - "*/tmp/*"
   - "*/cache/*"

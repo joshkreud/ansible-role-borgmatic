@@ -55,9 +55,3 @@ checks:
   - {{ checks }}
 {% endfor %}
 check_last: 3
-
-
-{% for command in borgmatic_commands %}
-{{ command }}:
-  {{ borgmatic_commands[command] | to_nice_yaml(indent=2) | trim | indent(8) }}
-{% endfor %}
