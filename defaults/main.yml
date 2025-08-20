@@ -1,11 +1,17 @@
 ---
-pip_package: python3-pip
-borgmatic_config_template: borgmatic-config.yml.j2
+borg_version: v1
+borg_repo_encryption_mode: repokey-blake2
+# borg_repo_encryption_mode: repokey-chacha20-poly1305 # Use for ARM Systems
+borg_backup_username: borgbackup
+borg_backup_known_hosts: ""
+
+# Cron
 borgmatic_cron: False
 borgmatic_cron_minute: 36
 borgmatic_cron_hour: 4
-borg_backup_username: borgbackup
-borg_backup_known_hosts: ""
+
+borgmatic_config_template: borgmatic-config.yml.j2 # Override Config for host specific templates.
+# Variables for Default config quicktemplating
 borg_backup_targets:
   - path: /srv/backup
     label: localsrv
@@ -17,13 +23,11 @@ borg_retention_policy:
   keep_daily: 7
   keep_weekly: 4
   keep_monthly: 6
-borgmatic_hooks:
-  on_error:
-    - echo "`date` - Error while creating a backup."
-  before_backup:
-    - echo "`date` - Starting backup."
-  after_backup:
-    - echo "`date` - Finished backup."
+borgmatic_commands:
+  - before: action
+    when: [create]
+    run:
+      - echo "`date` - Error while creating a backup."
 borg_exclude_patterns:
   - "*/tmp/*"
   - "*/cache/*"

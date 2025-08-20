@@ -1,4 +1,6 @@
 source_directories:
+# This is a Basic template, when nothing special is needed.
+# Use borgmatic_config_template for advanced configurations using a custom template file instead of this one.
 {% for source in borg_backup_source_paths %}
   - "{{ source }}"
 {% endfor %}
@@ -55,7 +57,7 @@ checks:
 check_last: 3
 
 
-{% for hook in borgmatic_hooks %}
-{{ hook }}:
-  {{ borgmatic_hooks[hook] | to_nice_yaml(indent=2) | trim | indent(8) }}
+{% for command in borgmatic_commands %}
+{{ command }}:
+  {{ borgmatic_commands[command] | to_nice_yaml(indent=2) | trim | indent(8) }}
 {% endfor %}
