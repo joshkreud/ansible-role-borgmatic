@@ -40,11 +40,17 @@
   changed_when: "'Write down the passphrase.' in borg_init_command.stderr"
   tags: ["skip_ansible_lint"]
 
-- name: Set Backup Cron Job
+- name: Find borgmatic binary path # noqa: command-instead-of-shell
+  become: yes
+  ansible.builtin.shell: "which borgmatic"
+  register: borgmatic_path
+  changed_when: false
+
+- name: "Set Backup Cron Job to: {{ 'present' if borgmatic_cron else 'absent' }}"
   become: yes
   ansible.builtin.cron:
     name: "Borg Backup"
     minute: "{{ borgmatic_cron_minute }}"
     hour: "{{ borgmatic_cron_hour }}"
-    job: "PATH=$PATH:/usr/bin:/usr/local/bin borgmatic --verbosity 1 --syslog-verbosity 1 >> /var/log/borg.log "
+    job: "PATH=$PATH:{{ borgmatic_path.stdout | dirname }} borgmatic --verbosity 1 --syslog-verbosity 1 >> /var/log/borg.log "
     state: "{{ 'present' if borgmatic_cron else 'absent' }}"
