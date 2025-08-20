@@ -3,6 +3,7 @@
   hosts: all
   vars:
     borg_backup_passphrase: moleculesecret
+    borg_borgmatic_cron: true
     molecule_test: true
   roles:
     - role: joshkreud.borgmatic
