@@ -1,23 +1,23 @@
----
-- name: Install Borgbackup
+- name: Install Borgbackup and jq
   ansible.builtin.package:
     name:
       - borgbackup
       - jq
+      - cron
     state: present
 
-- name: Enrsure Pip is installed
+- name: Install pipx
   ansible.builtin.package:
-    name: "{{ pip_package }}"
+    name: pipx
     state: present
 
-- name: Ensure Pip Packages installed
-  ansible.builtin.pip:
+- name: Install borgmatic via pipx
+  become: true
+  community.general.pipx:
     name: borgmatic
-  environment:
-    PIP_BREAK_SYSTEM_PACKAGES: "1"
+    state: present
 
-- name: Borgmatic Config Folder
+- name: Ensure Borgmatic Config Folder
   become: true
   ansible.builtin.file:
     path: "/etc/borgmatic"
