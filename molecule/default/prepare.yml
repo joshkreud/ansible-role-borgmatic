@@ -16,10 +16,10 @@
       changed_when: false
       failed_when: systemctl_status.rc > 1
 
-    - name: Install Openssh (Debian)
+    - name: Install Testing depends that are usually missing in containers
       ansible.builtin.apt:
         name:
           - openssh-client
-          - crontab
+          - cron
         state: present
         update_cache: true
