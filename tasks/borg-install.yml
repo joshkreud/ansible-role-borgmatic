@@ -14,8 +14,9 @@
 - name: Install borgmatic via pipx
   become: true
   community.general.pipx:
+    global: true
     name: borgmatic
-    state: present
+    state: latest
 
 - name: Ensure Borgmatic Config Folder
   become: true
