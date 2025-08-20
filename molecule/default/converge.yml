@@ -3,7 +3,9 @@
   hosts: all
   vars:
     borg_backup_passphrase: moleculesecret
-    borg_borgmatic_cron: true
+    borgmatic_cron: true
     molecule_test: true
-  roles:
-    - role: joshkreud.borgmatic
+  tasks:
+    - name: Import borgmatic role
+      ansible.builtin.import_role:
+        name: ../../..
