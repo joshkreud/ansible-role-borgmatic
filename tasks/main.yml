@@ -35,10 +35,20 @@
 - name: Ensure Borg repos initialized
   become: yes
   ansible.builtin.shell:
-    cmd: borgmatic init -e repokey --verbosity 2
+    cmd: "borgmatic init -e {{ borg_repo_encryption_mode }} --verbosity 2"
   register: borg_init_command
   changed_when: "'Write down the passphrase.' in borg_init_command.stderr"
   tags: ["skip_ansible_lint"]
+  when: borg_version == "v1"
+
+- name: Ensure Borg repos initialized (v2)
+  become: yes
+  ansible.builtin.shell:
+    cmd: "borg init --encryption {{ borg_repo_encryption_mode }}"
+  register: borg_init_command_v2
+  changed_when: "'Write down the passphrase.' in borg_init_command_v2.stderr"
+  tags: ["skip_ansible_lint"]
+  when: borg_version == "v2"
 
 - name: Find borgmatic binary path # noqa: command-instead-of-shell
   become: yes
