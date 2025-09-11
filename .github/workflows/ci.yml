@@ -17,21 +17,24 @@ jobs:
       - name: Check out the codebase.
         uses: actions/checkout@v5
 
-      - name: Set up Python 3.
+      - name: "Set up Python"
         uses: actions/setup-python@v6
         with:
-          python-version: "3.x"
+          python-version-file: ".python-version"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
 
       - name: Install test dependencies.
-        run: pip3 install ansible-lint yamllint
+        run: uv sync --locked --all-extras --dev
 
       - name: Ansible-Lint
         run: |
-          ansible-lint .
+          uv run ansible-lint .
 
       - name: Yamllint
         run: |
-          yamllint .
+          uv run yamllint .
 
   molecule:
     name: Molecule
@@ -47,16 +50,19 @@ jobs:
       - name: Check out the codebase.
         uses: actions/checkout@v5
 
-      - name: Set up Python 3.
+      - name: "Set up Python"
         uses: actions/setup-python@v6
         with:
-          python-version: "3.x"
+          python-version-file: ".python-version"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
 
       - name: Install test dependencies.
-        run: pip3 install ansible molecule-docker docker
+        run: uv sync --locked --all-extras --dev
 
       - name: Run Molecule tests.
-        run: molecule test
+        run: uv run molecule test
         env:
           PY_COLORS: "1"
           ANSIBLE_FORCE_COLOR: "1"
