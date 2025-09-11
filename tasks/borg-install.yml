@@ -6,17 +6,24 @@
       - cron
     state: present
 
-- name: Install pipx
-  ansible.builtin.package:
-    name: pipx
-    state: present
+- name: Ensure pipx is >=1.7
+  ansible.builtin.import_tasks: force_update_pipx.yml
 
+- name: Check Pipx installed
+  become: true
+  ansible.builtin.command: which pipx
+  register: pipx_path_result
+  failed_when: false
+  changed_when: false
+
+# Install borgmatic via pipx
 - name: Install borgmatic via pipx
   become: true
   community.general.pipx:
     global: true
     name: borgmatic
     state: latest
+    executable: "{{ pipx_path_result.stdout }}"
 
 - name: Ensure Borgmatic Config Folder
   become: true

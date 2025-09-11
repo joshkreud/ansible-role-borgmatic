@@ -1,0 +1,75 @@
+# This task force-updates pipx to >=1.7 if the installed version is <1.7
+# Implements Ubuntu 24.04 workaround for pipx upgrade
+
+- name: Check Pipx installed
+  become: true
+  ansible.builtin.command: which pipx
+  register: pipx_path_result
+  failed_when: false
+  changed_when: false
+
+- name: Install pipx via apt (old version)
+  become: yes
+  ansible.builtin.apt:
+    name:
+      - pipx
+      - python3-venv
+    state: present
+  when: pipx_path_result.rc != 0
+
+- name: Check installed pipx version
+  become: true
+  ansible.builtin.command: pipx --version
+  register: pipx_version_result
+  failed_when: false
+  changed_when: false
+
+- name: Set fact if pipx is outdated (<1.7) or not installed
+  ansible.builtin.set_fact:
+    pipx_outdated: >-
+      {{
+          pipx_version_result.stdout is defined
+          and (pipx_version_result.stdout.split(' ')[-1] | length > 0)
+          and (pipx_version_result.stdout.split(' ')[-1] is version('1.7', '<'))
+      }}
+
+- name: Force update pipx to latest version
+  when:
+    - pipx_outdated
+  block:
+    - name: Install latest pipx locally (pipx install pipx)
+      ansible.builtin.command: pipx install pipx
+      become: yes
+      register: pipx_local_install_result
+      changed_when: >-
+        (
+          'installed package pipx' in pipx_local_install_result.stdout
+        )
+        and not (
+          "'pipx' already seems to be installed. Not modifying existing installation in" in pipx_local_install_result.stdout
+        )
+      failed_when: pipx_local_install_result.rc != 0 and not "'pipx' already seems to be installed. Not modifying existing installation in" in pipx_local_install_result.stdout
+
+    - name: Purge apt pipx (removes old version)
+      become: yes
+      ansible.builtin.apt:
+        name: pipx
+        state: absent
+        autoremove: yes
+
+    - name: Install latest pipx globally via sudo
+      become: yes
+      ansible.builtin.command: ~/.local/bin/pipx install pipx --global
+      register: pipx_global_install_result
+      changed_when: >-
+        (
+          'installed package pipx' in pipx_global_install_result.stdout
+        )
+        and not (
+          "'pipx' already seems to be installed. Not modifying existing installation in" in pipx_global_install_result.stdout
+        )
+
+    - name: Ensure /usr/local/bin is set for global install (sudo pipx ensurepath --global)
+      become: yes
+      ansible.builtin.command: pipx ensurepath --global
+      changed_when: false
