@@ -11,6 +11,11 @@ repositories:
 {% if target.label is defined %}
     label: "{{ target.label }}"
 {% endif %}
+{% if target.encryption is defined %}
+    encryption: "{{ target.encryption }}"
+{% else %}
+    encryption: repokey-blake2
+{% endif %}
 {% endfor %}
 
 exclude_if_present:
