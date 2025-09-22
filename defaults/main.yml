@@ -1,6 +1,4 @@
 ---
-borg_version: v1
-borg_repo_encryption_mode: repokey-blake2
 # borg_repo_encryption_mode: repokey-chacha20-poly1305 # Use for ARM Systems
 borg_backup_username: borgbackup
 borg_backup_known_hosts: ""
