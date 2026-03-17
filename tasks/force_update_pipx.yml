@@ -9,7 +9,7 @@
   changed_when: false
 
 - name: Install pipx via apt (old version)
-  become: yes
+  become: True
   ansible.builtin.apt:
     name:
       - pipx
@@ -39,7 +39,7 @@
   block:
     - name: Install latest pipx locally (pipx install pipx)
       ansible.builtin.command: pipx install pipx
-      become: yes
+      become: True
       register: pipx_local_install_result
       changed_when: >-
         (
@@ -51,14 +51,14 @@
       failed_when: pipx_local_install_result.rc != 0 and not "'pipx' already seems to be installed. Not modifying existing installation in" in pipx_local_install_result.stdout
 
     - name: Purge apt pipx (removes old version)
-      become: yes
+      become: True
       ansible.builtin.apt:
         name: pipx
         state: absent
         autoremove: yes
 
     - name: Install latest pipx globally via sudo
-      become: yes
+      become: True
       ansible.builtin.command: ~/.local/bin/pipx install pipx --global
       register: pipx_global_install_result
       changed_when: >-
@@ -70,6 +70,6 @@
         )
 
     - name: Ensure /usr/local/bin is set for global install (sudo pipx ensurepath --global)
-      become: yes
+      become: True
       ansible.builtin.command: pipx ensurepath --global
       changed_when: false

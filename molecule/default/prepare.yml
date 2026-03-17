@@ -4,7 +4,7 @@
 
   tasks:
     - name: Wait for systemd to complete initialization. # noqa command-instead-of-module
-      become: yes
+      become: True
       ansible.builtin.command: systemctl is-system-running
       register: systemctl_status
       until: >

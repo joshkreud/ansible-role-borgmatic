@@ -5,15 +5,15 @@
       - borg_backup_passphrase is defined
 
 - name: Add Borguser
-  become: yes
+  become: True
   ansible.builtin.import_tasks: borg-user.yml
 
 - name: Install Borgmatic
-  become: yes
+  become: True
   ansible.builtin.import_tasks: borg-install.yml
 
 - name: Template Borgmatic Config
-  become: yes
+  become: True
   ansible.builtin.template:
     src: "{{ borgmatic_config_template }}"
     dest: /etc/borgmatic/config.yaml
@@ -22,7 +22,7 @@
     mode: 0660
 
 - name: Ensure Borg SSH Targets are in Known Hosts
-  become: yes
+  become: True
   when: borg_ssh_known_hosts is defined
   ansible.builtin.blockinfile:
     path: /root/.ssh/known_hosts
@@ -33,13 +33,13 @@
     mode: 0600
 
 - name: Find borgmatic binary path # noqa: command-instead-of-shell
-  become: yes
+  become: True
   ansible.builtin.shell: "which borgmatic"
   register: borgmatic_path
   changed_when: false
 
 - name: Ensure Borg repos initialized
-  become: yes
+  become: True
   ansible.builtin.shell:
     cmd: "{{ borgmatic_path.stdout }} init --verbosity 2"
   register: borg_init_command
@@ -47,7 +47,7 @@
   tags: ["skip_ansible_lint"]
 
 - name: "Set Backup Cron Job to: {{ 'present' if borgmatic_cron else 'absent' }}"
-  become: yes
+  become: True
   ansible.builtin.cron:
     name: "Borg Backup"
     minute: "{{ borgmatic_cron_minute }}"

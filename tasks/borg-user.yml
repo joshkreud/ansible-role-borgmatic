@@ -1,6 +1,6 @@
 ---
 - name: "Create Backup User"
-  become: yes
+  become: True
   ansible.builtin.user:
     name: "{{ borg_backup_username }}"
     generate_ssh_key: yes
@@ -10,7 +10,7 @@
   register: borgbackup_user
 
 - name: Add Known Hosts to Borg Backup User
-  become: yes
+  become: True
   ansible.builtin.copy:
     content: "{{ borg_backup_known_hosts }}"
     dest: "/home/{{ borg_backup_username }}/.ssh/known_hosts"
